@@ -1,5 +1,9 @@
 # US-HTS Classifier Agent
 
+> Published mainly for the eval pipeline: how the eval set is mined from public
+> data, how accuracy is measured per digit level, and what the numbers do and
+> do not support.
+
 An LLM agent that determines the correct **US HTS (HTSUS)** code for a product.
 It does not guess from memory: it reasons over the official tariff schedule, the
 legally-binding **Section/Chapter Notes**, and **CBP CROSS** ruling precedent,
@@ -129,6 +133,18 @@ Classifying one product averages ~$0.06 on `gpt-5-mini` at 8 tool-call rounds
 budget accordingly before rerunning it at scale. Swap `HTS_MODEL` for a
 cheaper or stronger model at any time (see `.env.example`); nothing else needs
 to change since the agent calls the OpenAI Responses API directly.
+
+## Known limitations
+
+- **Single run, n=89.** gpt-5-mini is nondeterministic enough that identical
+  code can swing ±10-15 points between runs at small n. The numbers above are
+  one run, not an average. Treating any single figure here as the accuracy of
+  this agent would be wrong.
+- **What would make these trustworthy:** n≥150 and at least 3 runs averaged,
+  with variance reported alongside the mean. That is the next thing on this repo.
+- **CROSS labels are not ground truth.** A ruling's code is correct for the
+  circumstances of that ruling. Several `deepestMatch: 'miss'` cases in the
+  snapshot are defensible alternative classifications, not errors.
 
 ## License
 
