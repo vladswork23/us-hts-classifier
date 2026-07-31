@@ -1,0 +1,826 @@
+{
+  "meta": {
+    "date": "2026-07-31T16:26:28.803Z",
+    "model": "gpt-5-mini",
+    "reasoningEffort": "medium",
+    "n": 89,
+    "concurrency": 5,
+    "note": "Live run against CBP CROSS-derived eval cases. Not a fixed benchmark: CROSS rulings and case selection (see run-eval.ts SQL) can shift between runs."
+  },
+  "summary": [
+    "N: 89 (errors: 0)",
+    "(primary metric = predicted code vs ANY code the ruling assigned)",
+    "accuracy@2: 73.0% (65/89)   |  strict vs tariffs[0]: 68.5%   |  incl. alternatives: 88.8% (79/89)",
+    "accuracy@4: 59.6% (53/89)   |  strict vs tariffs[0]: 53.9%   |  incl. alternatives: 79.8% (71/89)",
+    "accuracy@6: 44.9% (40/89)   |  strict vs tariffs[0]: 41.6%   |  incl. alternatives: 59.6% (53/89)",
+    "accuracy@8: 38.2% (34/89)   |  strict vs tariffs[0]: 36.0%   |  incl. alternatives: 47.2% (42/89)",
+    "accuracy@10: 32.6% (29/89)   |  strict vs tariffs[0]: 31.5%   |  incl. alternatives: 39.3% (35/89)",
+    "avg cost: $0.05943",
+    "avg processingTime: 61895 ms",
+    "avg rounds: 8.03",
+    "avg toolCalls: 8.28"
+  ],
+  "cases": [
+    {
+      "rulingNumber": "N353266",
+      "correctCode": "9617.00.1000",
+      "predictedCode": "9617.00.10.00",
+      "deepestMatch": "@10",
+      "confidence": "Medium",
+      "rounds": 8,
+      "cost": 0.026
+    },
+    {
+      "rulingNumber": "N343421",
+      "correctCode": "3924.10.4000",
+      "predictedCode": "3923.30.00.90",
+      "deepestMatch": "@2",
+      "confidence": "Low",
+      "rounds": 6,
+      "cost": 0.03809
+    },
+    {
+      "rulingNumber": "N350227",
+      "correctCode": "7318.15.2095",
+      "predictedCode": "7318152095",
+      "deepestMatch": "@10",
+      "confidence": "High",
+      "rounds": 3,
+      "cost": 0.0187
+    },
+    {
+      "rulingNumber": "N346575",
+      "correctCode": "8302.49.6085",
+      "predictedCode": "8302416045",
+      "deepestMatch": "@4",
+      "confidence": "Medium",
+      "rounds": 11,
+      "cost": 0.03927
+    },
+    {
+      "rulingNumber": "N340401",
+      "correctCode": "3924.10.4000",
+      "predictedCode": "3923300090",
+      "deepestMatch": "@2",
+      "confidence": "High",
+      "rounds": 6,
+      "cost": 0.03336
+    },
+    {
+      "rulingNumber": "N337686",
+      "correctCode": "8539.52.0091",
+      "predictedCode": "8539.52.0091",
+      "deepestMatch": "@10",
+      "confidence": "High",
+      "rounds": 4,
+      "cost": 0.03486
+    },
+    {
+      "rulingNumber": "N336903",
+      "correctCode": "4202.32.9300",
+      "predictedCode": "4202.32.20.00",
+      "deepestMatch": "@6",
+      "confidence": "Low",
+      "rounds": 7,
+      "cost": 0.02674
+    },
+    {
+      "rulingNumber": "N331830",
+      "correctCode": "6307.90.9891",
+      "predictedCode": "6307.90.98.91",
+      "deepestMatch": "@10",
+      "confidence": "Medium",
+      "rounds": 9,
+      "cost": 0.03866
+    },
+    {
+      "rulingNumber": "N331649",
+      "correctCode": "9505.10.2500",
+      "predictedCode": "9505.90.6000",
+      "deepestMatch": "@4",
+      "confidence": "Low",
+      "rounds": 2,
+      "cost": 0.00675
+    },
+    {
+      "rulingNumber": "N330046",
+      "correctCode": "7013.42.4000",
+      "predictedCode": "7013.42.4000",
+      "deepestMatch": "@10",
+      "confidence": "High",
+      "rounds": 7,
+      "cost": 0.03834
+    },
+    {
+      "rulingNumber": "N328470",
+      "correctCode": "7318.19.0000",
+      "predictedCode": "7318.15.80.00",
+      "deepestMatch": "@4",
+      "confidence": "Low",
+      "rounds": 8,
+      "cost": 0.04733
+    },
+    {
+      "rulingNumber": "N319837",
+      "correctCode": "8306.29.0000",
+      "predictedCode": "9405296010",
+      "deepestMatch": "miss",
+      "confidence": "Low",
+      "rounds": 8,
+      "cost": 0.04192
+    },
+    {
+      "rulingNumber": "N319439",
+      "correctCode": "8516.79.0000",
+      "predictedCode": "8516.79.00.00",
+      "deepestMatch": "@10",
+      "confidence": "High",
+      "rounds": 6,
+      "cost": 0.06397
+    },
+    {
+      "rulingNumber": "N318659",
+      "correctCode": "7318.15.2091",
+      "predictedCode": "7316.00.00.00",
+      "deepestMatch": "@2",
+      "confidence": "Medium",
+      "rounds": 11,
+      "cost": 0.07274
+    },
+    {
+      "rulingNumber": "H308209",
+      "correctCode": "7307.19.3085",
+      "predictedCode": "7307193085",
+      "deepestMatch": "@10",
+      "confidence": "High",
+      "rounds": 11,
+      "cost": 0.06588
+    },
+    {
+      "rulingNumber": "N316657",
+      "correctCode": "6307.90.9891",
+      "predictedCode": "5603.12.00.70",
+      "deepestMatch": "miss",
+      "confidence": "Low",
+      "rounds": 12,
+      "cost": 0.06216
+    },
+    {
+      "rulingNumber": "N316886",
+      "correctCode": "9013.80.2000",
+      "predictedCode": "4202.32.20.00",
+      "deepestMatch": "miss",
+      "confidence": "Medium",
+      "rounds": 11,
+      "cost": 0.04946
+    },
+    {
+      "rulingNumber": "N306755",
+      "correctCode": "5609.00.3000",
+      "predictedCode": "6307.90.40.20",
+      "deepestMatch": "miss",
+      "confidence": "Medium",
+      "rounds": 10,
+      "cost": 0.03854
+    },
+    {
+      "rulingNumber": "N305669",
+      "correctCode": "8421.21.0000",
+      "predictedCode": "9617.00.10.00",
+      "deepestMatch": "miss",
+      "confidence": "Low",
+      "rounds": 8,
+      "cost": 0.03226
+    },
+    {
+      "rulingNumber": "N305216",
+      "correctCode": "7326.90.8688",
+      "predictedCode": "7326.90.8688",
+      "deepestMatch": "@10",
+      "confidence": "High",
+      "rounds": 9,
+      "cost": 0.05412
+    },
+    {
+      "rulingNumber": "N304232",
+      "correctCode": "7326.90.8688",
+      "predictedCode": "8536.69.40.40",
+      "deepestMatch": "miss",
+      "confidence": "Medium",
+      "rounds": 6,
+      "cost": 0.06493
+    },
+    {
+      "rulingNumber": "N299732",
+      "correctCode": "7323.93.0080",
+      "predictedCode": "9617.00.10.00",
+      "deepestMatch": "miss",
+      "confidence": "Low",
+      "rounds": 5,
+      "cost": 0.01328
+    },
+    {
+      "rulingNumber": "N298773",
+      "correctCode": "8714.99.8000",
+      "predictedCode": "8714.99.80.00",
+      "deepestMatch": "@10",
+      "confidence": "High",
+      "rounds": 6,
+      "cost": 0.03352
+    },
+    {
+      "rulingNumber": "N295419",
+      "correctCode": "4202.32.9300",
+      "predictedCode": "4202322000",
+      "deepestMatch": "@6",
+      "confidence": "Medium",
+      "rounds": 7,
+      "cost": 0.0304
+    },
+    {
+      "rulingNumber": "H276962",
+      "correctCode": "7307.19.3085",
+      "predictedCode": "7307.19.30.85",
+      "deepestMatch": "@10",
+      "confidence": "High",
+      "rounds": 9,
+      "cost": 0.05228
+    },
+    {
+      "rulingNumber": "N293545",
+      "correctCode": "7318.19.0000",
+      "predictedCode": "8483.40.80.00",
+      "deepestMatch": "miss",
+      "confidence": "Low",
+      "rounds": 5,
+      "cost": 0.01674
+    },
+    {
+      "rulingNumber": "N289071",
+      "correctCode": "9401.61.4011",
+      "predictedCode": "9401.61.4011",
+      "deepestMatch": "@10",
+      "confidence": "High",
+      "rounds": 8,
+      "cost": 0.03849
+    },
+    {
+      "rulingNumber": "N286857",
+      "correctCode": "7616.99.5190",
+      "predictedCode": "3926.90.99.89",
+      "deepestMatch": "miss",
+      "confidence": "Medium",
+      "rounds": 8,
+      "cost": 0.07397
+    },
+    {
+      "rulingNumber": "N286673",
+      "correctCode": "9401.61.4031",
+      "predictedCode": "9401.99.90.00",
+      "deepestMatch": "@4",
+      "confidence": "Low",
+      "rounds": 3,
+      "cost": 0.00912
+    },
+    {
+      "rulingNumber": "N283182",
+      "correctCode": "8424.20.1000",
+      "predictedCode": "3923.30.00.90",
+      "deepestMatch": "miss",
+      "confidence": "Low",
+      "rounds": 10,
+      "cost": 0.06676
+    },
+    {
+      "rulingNumber": "N281903",
+      "correctCode": "9031.80.8085",
+      "predictedCode": "8507.60.0000",
+      "deepestMatch": "miss",
+      "confidence": "Low",
+      "rounds": 4,
+      "cost": 0.02096
+    },
+    {
+      "rulingNumber": "N281673",
+      "correctCode": "9505.90.6000",
+      "predictedCode": "9505.90.60.00",
+      "deepestMatch": "@10",
+      "confidence": "Medium",
+      "rounds": 6,
+      "cost": 0.02029
+    },
+    {
+      "rulingNumber": "N278961",
+      "correctCode": "9505.90.6000",
+      "predictedCode": "9405.21.80.10",
+      "deepestMatch": "miss",
+      "confidence": "Low",
+      "rounds": 10,
+      "cost": 0.04232
+    },
+    {
+      "rulingNumber": "N276932",
+      "correctCode": "8516.79.0000",
+      "predictedCode": "4014.90.50.00",
+      "deepestMatch": "miss",
+      "confidence": "High",
+      "rounds": 11,
+      "cost": 0.04908
+    },
+    {
+      "rulingNumber": "N270359",
+      "correctCode": "9401.79.0011",
+      "predictedCode": "9401.79.00.11",
+      "deepestMatch": "@10",
+      "confidence": "High",
+      "rounds": 11,
+      "cost": 0.04104
+    },
+    {
+      "rulingNumber": "N261287",
+      "correctCode": "9401.69.2030",
+      "predictedCode": "9401.69.60.00",
+      "deepestMatch": "@6",
+      "confidence": "Low",
+      "rounds": 5,
+      "cost": 0.0226
+    },
+    {
+      "rulingNumber": "N258498",
+      "correctCode": "8302.41.6045",
+      "predictedCode": "8302.41.60.45",
+      "deepestMatch": "@10",
+      "confidence": "Low",
+      "rounds": 12,
+      "cost": 0.03828
+    },
+    {
+      "rulingNumber": "N256931",
+      "correctCode": "6109.90.1060",
+      "predictedCode": "6109.10.00.27",
+      "deepestMatch": "@4",
+      "confidence": "Low",
+      "rounds": 11,
+      "cost": 0.08725
+    },
+    {
+      "rulingNumber": "N254411",
+      "correctCode": "8526.92.5000",
+      "predictedCode": "8526.92.50.00",
+      "deepestMatch": "@10",
+      "confidence": "High",
+      "rounds": 6,
+      "cost": 0.06068
+    },
+    {
+      "rulingNumber": "N248128",
+      "correctCode": "8513.10.4000",
+      "predictedCode": "8513.10.4000",
+      "deepestMatch": "@10",
+      "confidence": "Medium",
+      "rounds": 4,
+      "cost": 0.04864
+    },
+    {
+      "rulingNumber": "N246940",
+      "correctCode": "6109.10.0027",
+      "predictedCode": "6109.10.00.12",
+      "deepestMatch": "@8",
+      "confidence": "Low",
+      "rounds": 7,
+      "cost": 0.06626
+    },
+    {
+      "rulingNumber": "N246008",
+      "correctCode": "8513.10.4000",
+      "predictedCode": "8539.52.00.91",
+      "deepestMatch": "@2",
+      "confidence": "Low",
+      "rounds": 7,
+      "cost": 0.09363
+    },
+    {
+      "rulingNumber": "N245150",
+      "correctCode": "6109.10.0012",
+      "predictedCode": "6109.10.00.12",
+      "deepestMatch": "@10",
+      "confidence": "Medium",
+      "rounds": 9,
+      "cost": 0.09075
+    },
+    {
+      "rulingNumber": "N242169",
+      "correctCode": "6109.90.1049",
+      "predictedCode": "6105.10.00.10",
+      "deepestMatch": "@2",
+      "confidence": "Medium",
+      "rounds": 3,
+      "cost": 0.02283
+    },
+    {
+      "rulingNumber": "N217256",
+      "correctCode": "4202.99.9000",
+      "predictedCode": "4202.32.20.00",
+      "deepestMatch": "@4",
+      "confidence": "Medium",
+      "rounds": 6,
+      "cost": 0.02384
+    },
+    {
+      "rulingNumber": "N191502",
+      "correctCode": "6913.90.5000",
+      "predictedCode": "6913.90.50.00",
+      "deepestMatch": "@10",
+      "confidence": "Medium",
+      "rounds": 7,
+      "cost": 0.0265
+    },
+    {
+      "rulingNumber": "N184715",
+      "correctCode": "8517.69.0000",
+      "predictedCode": "3926.90.99.89",
+      "deepestMatch": "miss",
+      "confidence": "Low",
+      "rounds": 12,
+      "cost": 0.14949
+    },
+    {
+      "rulingNumber": "N167097",
+      "correctCode": "7318.16.0085",
+      "predictedCode": "7318.16.00.85",
+      "deepestMatch": "@10",
+      "confidence": "Medium",
+      "rounds": 10,
+      "cost": 0.07066
+    },
+    {
+      "rulingNumber": "N158758",
+      "correctCode": "3916.90.5000",
+      "predictedCode": "8539.52.00.91",
+      "deepestMatch": "@2",
+      "confidence": "Medium",
+      "rounds": 11,
+      "cost": 0.09091
+    },
+    {
+      "rulingNumber": "N116408",
+      "correctCode": "7018.90.5000",
+      "predictedCode": "7018.90.50.00",
+      "deepestMatch": "@10",
+      "confidence": "High",
+      "rounds": 7,
+      "cost": 0.03653
+    },
+    {
+      "rulingNumber": "N116243",
+      "correctCode": "4202.92.6091",
+      "predictedCode": "3926.90.99.00",
+      "deepestMatch": "miss",
+      "confidence": "Low",
+      "rounds": 10,
+      "cost": 0.03217
+    },
+    {
+      "rulingNumber": "N090617",
+      "correctCode": "3926.30.5000",
+      "predictedCode": "3926.30.50.00",
+      "deepestMatch": "@10",
+      "confidence": "Low",
+      "rounds": 11,
+      "cost": 0.05194
+    },
+    {
+      "rulingNumber": "N077240",
+      "correctCode": "4202.92.6091",
+      "predictedCode": "3926.90.99.89",
+      "deepestMatch": "miss",
+      "confidence": "High",
+      "rounds": 11,
+      "cost": 0.10215
+    },
+    {
+      "rulingNumber": "N067095",
+      "correctCode": "8412.90.1000",
+      "predictedCode": "7318.22.00.00",
+      "deepestMatch": "miss",
+      "confidence": "Medium",
+      "rounds": 12,
+      "cost": 0.05136
+    },
+    {
+      "rulingNumber": "N052326",
+      "correctCode": "9013.80.2000",
+      "predictedCode": "9405.42.84.10",
+      "deepestMatch": "@4",
+      "confidence": "Low",
+      "rounds": 10,
+      "cost": 0.0972
+    },
+    {
+      "rulingNumber": "N054264",
+      "correctCode": "6110.20.2079",
+      "predictedCode": "6110.20.20.25",
+      "deepestMatch": "@8",
+      "confidence": "Medium",
+      "rounds": 10,
+      "cost": 0.10307
+    },
+    {
+      "rulingNumber": "N009984",
+      "correctCode": "4014.90.5000",
+      "predictedCode": "4014.90.50.00",
+      "deepestMatch": "@10",
+      "confidence": "High",
+      "rounds": 10,
+      "cost": 0.06951
+    },
+    {
+      "rulingNumber": "R04997",
+      "correctCode": "8481.80.5090",
+      "predictedCode": "8418.69.01.20",
+      "deepestMatch": "@2",
+      "confidence": "Low",
+      "rounds": 8,
+      "cost": 0.12526
+    },
+    {
+      "rulingNumber": "R03851",
+      "correctCode": "8481.80.5090",
+      "predictedCode": "8418.69.01.20",
+      "deepestMatch": "@2",
+      "confidence": "High",
+      "rounds": 11,
+      "cost": 0.1815
+    },
+    {
+      "rulingNumber": "M83236",
+      "correctCode": "8539.49.0080",
+      "predictedCode": "8539.52.00.00",
+      "deepestMatch": "@4",
+      "confidence": "Low",
+      "rounds": 3,
+      "cost": 0.00837
+    },
+    {
+      "rulingNumber": "M81084",
+      "correctCode": "3926.90.4000",
+      "predictedCode": "7117.90.90.00",
+      "deepestMatch": "miss",
+      "confidence": "Low",
+      "rounds": 12,
+      "cost": 0.0535
+    },
+    {
+      "rulingNumber": "L86672",
+      "correctCode": "3406.00.0000",
+      "predictedCode": "9405.40.8000",
+      "deepestMatch": "miss",
+      "confidence": "Low",
+      "rounds": 12,
+      "cost": 0.17919
+    },
+    {
+      "rulingNumber": "L83890",
+      "correctCode": "8302.41.6080",
+      "predictedCode": "8302416080",
+      "deepestMatch": "@10",
+      "confidence": "Low",
+      "rounds": 7,
+      "cost": 0.02477
+    },
+    {
+      "rulingNumber": "L82175",
+      "correctCode": "7325.99.1000",
+      "predictedCode": "7325.10.00.80",
+      "deepestMatch": "@4",
+      "confidence": "Low",
+      "rounds": 9,
+      "cost": 0.18398
+    },
+    {
+      "rulingNumber": "R01292",
+      "correctCode": "9403.60.8040",
+      "predictedCode": "9403.40.90.40",
+      "deepestMatch": "@4",
+      "confidence": "Medium",
+      "rounds": 10,
+      "cost": 0.04668
+    },
+    {
+      "rulingNumber": "L80622",
+      "correctCode": "7318.29.0000",
+      "predictedCode": "7318.15.80.82",
+      "deepestMatch": "@4",
+      "confidence": "Low",
+      "rounds": 3,
+      "cost": 0.0136
+    },
+    {
+      "rulingNumber": "K88376",
+      "correctCode": "8512.20.2040",
+      "predictedCode": "8512.20.20.40",
+      "deepestMatch": "@10",
+      "confidence": "Medium",
+      "rounds": 8,
+      "cost": 0.09436
+    },
+    {
+      "rulingNumber": "K87789",
+      "correctCode": "6107.11.0020",
+      "predictedCode": "6109.10.00.00",
+      "deepestMatch": "@8",
+      "confidence": "Low",
+      "rounds": 2,
+      "cost": 0.0075
+    },
+    {
+      "rulingNumber": "K85868",
+      "correctCode": "8512.20.2040",
+      "predictedCode": "8512.20.20.00",
+      "deepestMatch": "@8",
+      "confidence": "Low",
+      "rounds": 8,
+      "cost": 0.10047
+    },
+    {
+      "rulingNumber": "K81709",
+      "correctCode": "4602.90.0000",
+      "predictedCode": "4602.90.0000",
+      "deepestMatch": "@10",
+      "confidence": "High",
+      "rounds": 5,
+      "cost": 0.02452
+    },
+    {
+      "rulingNumber": "J87732",
+      "correctCode": "9031.80.8085",
+      "predictedCode": "9017.30.80.00",
+      "deepestMatch": "@2",
+      "confidence": "Medium",
+      "rounds": 9,
+      "cost": 0.04686
+    },
+    {
+      "rulingNumber": "J83915",
+      "correctCode": "6110.90.9066",
+      "predictedCode": "6109.10.00.40",
+      "deepestMatch": "@10",
+      "confidence": "Low",
+      "rounds": 4,
+      "cost": 0.03499
+    },
+    {
+      "rulingNumber": "I82967",
+      "correctCode": "7318.29.0000",
+      "predictedCode": "8301.30.00.60",
+      "deepestMatch": "miss",
+      "confidence": "Low",
+      "rounds": 6,
+      "cost": 0.0471
+    },
+    {
+      "rulingNumber": "H87219",
+      "correctCode": "8504.40.8500",
+      "predictedCode": "8507.60.00.90",
+      "deepestMatch": "@2",
+      "confidence": "Medium",
+      "rounds": 10,
+      "cost": 0.11653
+    },
+    {
+      "rulingNumber": "H84112",
+      "correctCode": "4202.22.1500",
+      "predictedCode": "4202.22.89.00",
+      "deepestMatch": "@6",
+      "confidence": "Low",
+      "rounds": 4,
+      "cost": 0.01706
+    },
+    {
+      "rulingNumber": "H80372",
+      "correctCode": "4202.99.9000",
+      "predictedCode": "3926.90.99.00",
+      "deepestMatch": "miss",
+      "confidence": "Low",
+      "rounds": 9,
+      "cost": 0.03277
+    },
+    {
+      "rulingNumber": "G89189",
+      "correctCode": "4202.22.6000",
+      "predictedCode": "4202.22.81.00",
+      "deepestMatch": "@6",
+      "confidence": "Low",
+      "rounds": 7,
+      "cost": 0.02775
+    },
+    {
+      "rulingNumber": "G82566",
+      "correctCode": "4420.90.8000",
+      "predictedCode": "9401.69.40.35",
+      "deepestMatch": "miss",
+      "confidence": "Medium",
+      "rounds": 11,
+      "cost": 0.06481
+    },
+    {
+      "rulingNumber": "G82324",
+      "correctCode": "9405.50.4000",
+      "predictedCode": "9405.50.40.00",
+      "deepestMatch": "@10",
+      "confidence": "Low",
+      "rounds": 10,
+      "cost": 0.04247
+    },
+    {
+      "rulingNumber": "F86972",
+      "correctCode": "9401.80.6030",
+      "predictedCode": "9401.99.90.00",
+      "deepestMatch": "@4",
+      "confidence": "Low",
+      "rounds": 4,
+      "cost": 0.01679
+    },
+    {
+      "rulingNumber": "F80528",
+      "correctCode": "9401.79.0015",
+      "predictedCode": "9401.79.00.11",
+      "deepestMatch": "@8",
+      "confidence": "Medium",
+      "rounds": 11,
+      "cost": 0.04257
+    },
+    {
+      "rulingNumber": "B84476",
+      "correctCode": "6103.43.1570",
+      "predictedCode": "6109.10.00.14",
+      "deepestMatch": "@4",
+      "confidence": "Low",
+      "rounds": 10,
+      "cost": 0.11505
+    },
+    {
+      "rulingNumber": "A89248",
+      "correctCode": "7907.00.6000",
+      "predictedCode": "7316.00.00.00",
+      "deepestMatch": "@2",
+      "confidence": "Low",
+      "rounds": 11,
+      "cost": 0.07191
+    },
+    {
+      "rulingNumber": "A82805",
+      "correctCode": "7308.40.0000",
+      "predictedCode": "7308.40.00.00",
+      "deepestMatch": "@10",
+      "confidence": "Medium",
+      "rounds": 11,
+      "cost": 0.16766
+    },
+    {
+      "rulingNumber": "818029",
+      "correctCode": "6912.00.5000",
+      "predictedCode": "8418.69.01.20",
+      "deepestMatch": "miss",
+      "confidence": "Medium",
+      "rounds": 9,
+      "cost": 0.24336
+    },
+    {
+      "rulingNumber": "813276",
+      "correctCode": "6114.30.3070",
+      "predictedCode": "6109.10.00.12",
+      "deepestMatch": "@2",
+      "confidence": "Low",
+      "rounds": 7,
+      "cost": 0.06586
+    },
+    {
+      "rulingNumber": "880582",
+      "correctCode": "3923.30.0090",
+      "predictedCode": "4202.92.31.31",
+      "deepestMatch": "@6",
+      "confidence": "Medium",
+      "rounds": 10,
+      "cost": 0.05228
+    },
+    {
+      "rulingNumber": "867319",
+      "correctCode": "3926.10.0000",
+      "predictedCode": "8470.10.00.60",
+      "deepestMatch": "miss",
+      "confidence": "Low",
+      "rounds": 12,
+      "cost": 0.16822
+    },
+    {
+      "rulingNumber": "089319",
+      "correctCode": "4014.90.5000",
+      "predictedCode": "4014.90.50.00",
+      "deepestMatch": "@10",
+      "confidence": "High",
+      "rounds": 5,
+      "cost": 0.0329
+    }
+  ]
+}

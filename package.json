@@ -1,0 +1,32 @@
+{
+  "name": "us-hts-classifier",
+  "version": "0.1.0",
+  "private": true,
+  "description": "An LLM agent that classifies products into US HTS (HTSUS) tariff codes, grounded in the official schedule, Section/Chapter Notes, and CBP CROSS ruling precedent.",
+  "license": "MIT",
+  "scripts": {
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio",
+    "hts:pull": "npx tsx lib/hts/scripts/01-pull-hts.ts",
+    "hts:load": "npx tsx lib/hts/scripts/02-load-codes.ts",
+    "hts:notes": "npx tsx lib/hts/scripts/03-pull-notes.ts",
+    "hts:evalset": "npx tsx lib/hts/scripts/04-build-evalset.ts",
+    "hts:embed": "npx tsx lib/hts/scripts/05-embed.ts",
+    "hts:ingest": "npm run hts:pull && npm run hts:load && npm run hts:notes",
+    "hts:eval": "npx tsx lib/hts/eval/run-eval.ts"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "drizzle-orm": "^0.43.1",
+    "openai": "^4.76.0",
+    "postgres": "^3.4.5",
+    "unpdf": "^1.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "drizzle-kit": "^0.31.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.8.3"
+  }
+}
