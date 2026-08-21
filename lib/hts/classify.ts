@@ -4,6 +4,8 @@ import { chapterOf } from './sections';
 import { verifyClassification } from './verify';
 import { calibrateConfidence } from './calibrate';
 import { htsConfigured } from './db/client';
+import { langfuseEnabled, getLangfuse, flushLangfuse } from './langfuse';
+import type { LangfuseTraceClient } from 'langfuse';
 import type {
   ClassifyOptions,
   ClassifyOutcome,
@@ -153,6 +155,18 @@ export async function classifyHts(
   const notesRead = new Set<string>(); // chapters the agent has called get_notes for
   let notesEnforced = false; // we require "read notes before submit" at most once
 
+  // Langfuse: one trace per classifyHts() call, a generation per round-trip to
+  // the model, and a span per tool call — mirrors the ClassifyTraceEntry[]
+  // above but visible in the Langfuse UI (prompts, timings, cost, nesting).
+  // No-op (lfTrace stays undefined) when LANGFUSE_* env vars are not set.
+  const lf = langfuseEnabled() ? getLangfuse() : null;
+  const lfTrace: LangfuseTraceClient | undefined = lf?.trace({
+    name: 'classifyHts',
+    input: productText,
+    sessionId: opts.sessionId,
+    metadata: { model, reasoningEffort: effort },
+  });
+
   while (rounds < maxRounds) {
     rounds++;
 
@@ -167,18 +181,32 @@ export async function classifyHts(
     if (previousResponseId) body.previous_response_id = previousResponseId;
     else body.instructions = HTS_SYSTEM_PROMPT;
 
-    const resp = await fetch(OPENAI_RESPONSES_URL, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-      signal: opts.signal ?? AbortSignal.timeout(180000),
+    const lfGen = lfTrace?.generation({
+      name: `round-${rounds}`,
+      model,
+      modelParameters: { reasoning_effort: effort, max_output_tokens: maxOutputTokens },
+      input: previousResponseId ? input : [{ role: 'system', content: HTS_SYSTEM_PROMPT }, ...input],
     });
+
+    let resp: Response;
+    try {
+      resp = await fetch(OPENAI_RESPONSES_URL, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+        signal: opts.signal ?? AbortSignal.timeout(180000),
+      });
+    } catch (e: any) {
+      lfGen?.end({ level: 'ERROR', statusMessage: e?.message || String(e) });
+      throw e;
+    }
 
     if (!resp.ok) {
       const txt = await resp.text();
+      lfGen?.end({ level: 'ERROR', statusMessage: `HTTP ${resp.status}: ${txt.slice(0, 500)}` });
       throw new Error(`OpenAI Responses API error ${resp.status}: ${txt.slice(0, 500)}`);
     }
 
@@ -186,6 +214,10 @@ export async function classifyHts(
     previousResponseId = data.id;
     totalIn += Number(data.usage?.input_tokens || 0);
     totalOut += Number(data.usage?.output_tokens || 0);
+    lfGen?.end({
+      output: data.output,
+      usage: { input: data.usage?.input_tokens, output: data.usage?.output_tokens, unit: 'TOKENS' },
+    });
 
     const output: any[] = Array.isArray(data.output) ? data.output : [];
     const functionCalls = output.filter((o) => o?.type === 'function_call');
@@ -251,11 +283,14 @@ export async function classifyHts(
         if (c) notesRead.add(c);
       }
       opts.onEvent?.({ type: 'tool', detail: { name: call.name, args } });
+      const lfSpan = lfTrace?.span({ name: call.name, input: args });
       let out: string;
       try {
         out = await runDataTool(call.name, args);
+        lfSpan?.end({ output: out });
       } catch (e: any) {
         out = `Tool error: ${e?.message || String(e)}`;
+        lfSpan?.end({ output: out, level: 'ERROR' });
       }
       trace.push({ tool: call.name, input: args, output: out });
       outputs.push({ type: 'function_call_output', call_id: call.call_id, output: out });
@@ -296,7 +331,7 @@ export async function classifyHts(
   let verified = false;
   const doVerify = opts.verify ?? process.env.HTS_VERIFY === 'true';
   if (doVerify && result.hs_code) {
-    const v = await verifyClassification(productText, result, { model, signal: opts.signal });
+    const v = await verifyClassification(productText, result, { model, signal: opts.signal, lfTrace });
     if (v) {
       verified = true;
       totalIn += v.inTok;
@@ -335,16 +370,39 @@ export async function classifyHts(
     result.calibration = { signals: cal.signals };
   }
 
+  const cost = estimateCost(model, totalIn, totalOut);
+
+  // Finalize the trace: the output the UI shows for this run, plus a
+  // deterministic score computed from the SAME calibration signals used for
+  // needs_human_review — this is what shows up as an "eval" on the trace in
+  // Langfuse without needing a labeled dataset (score fully offline/free).
+  if (lfTrace) {
+    lfTrace.update({ output: result, metadata: { rounds, toolCalls, cost } });
+    if (result.hs_code) {
+      lfTrace.score({
+        name: 'calibrated_confidence_pct',
+        value: result.confidence_pct,
+        comment: (result.calibration?.signals || []).join('; '),
+      });
+      lfTrace.score({ name: 'code_valid', value: result.code_valid ? 1 : 0 });
+    }
+    // Queued events are batched by the SDK; flush so a short-lived script
+    // (the README example, a one-off CLI call, `hts:eval`) doesn't exit before
+    // they're sent.
+    await flushLangfuse();
+  }
+
   return {
     result,
     usage: {
       processingTime: Date.now() - startTime,
-      cost: estimateCost(model, totalIn, totalOut),
+      cost,
       totalTokens: totalIn + totalOut,
       toolCalls,
       rounds,
       model,
       verified,
+      traceId: lfTrace?.id,
     },
     trace,
   };

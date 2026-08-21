@@ -61,6 +61,9 @@ export interface ClassifyUsage {
   model: string;
   /** Whether the optional second-pass verifier ran. */
   verified: boolean;
+  /** Langfuse trace id for this run, when LANGFUSE_* env vars are set — use it
+   * to look up the trace in the UI or attach a score (e.g. from an eval run). */
+  traceId?: string;
 }
 
 export interface ClassifyOptions {
@@ -78,6 +81,8 @@ export interface ClassifyOptions {
    * unless explicitly enabled.
    */
   verify?: boolean;
+  /** Groups related traces in Langfuse (e.g. an eval run id). No-op without Langfuse configured. */
+  sessionId?: string;
 }
 
 export interface ClassifyTraceEntry {

@@ -2,6 +2,7 @@ import 'dotenv/config';
 
 import { getHtsClient, closeHtsDb } from '@/lib/hts/db/client';
 import { classifyHts } from '@/lib/hts/classify';
+import { langfuseEnabled, getLangfuse, flushLangfuse } from '@/lib/hts/langfuse';
 
 /**
  * Evaluate the HTS classifier against the labeled CROSS eval set.
@@ -106,6 +107,11 @@ async function run(): Promise<void> {
   const concurrency = Number(process.env.HTS_EVAL_CONCURRENCY || 3);
 
   const sql = getHtsClient();
+  // Groups every case's trace under one run in the Langfuse UI (Sessions view).
+  // No-op when Langfuse isn't configured.
+  const runId = `eval-${new Date().toISOString().replace(/[:.]/g, '-')}`;
+  if (langfuseEnabled()) console.log(`Langfuse session: ${runId}`);
+
   // Case selection (deterministic):
   // - label must still exist verbatim in the loaded HTS schedule (over half the
   //   mined CROSS labels are decades old and use stale statistical suffixes —
@@ -174,7 +180,7 @@ async function run(): Promise<void> {
       };
 
       try {
-        const { result, usage } = await classifyHts(c.product_text);
+        const { result, usage } = await classifyHts(c.product_text, { sessionId: runId });
         const predDigits = digitsOnly(result.hs_code);
         // The candidate set the product would surface: primary code + alternatives.
         const candidateDigits = [result.hs_code, ...(result.alternatives || []).map((a) => a.code)]
@@ -189,6 +195,19 @@ async function run(): Promise<void> {
           base.matchedAny[level] = candidateDigits.some((d) =>
             labels.some((l) => matchesAtLevel(d, l, level)),
           );
+        }
+        // Attach the ground-truth eval scores to this case's trace — this is
+        // the reference-based metric (predicted digit-prefix vs the CROSS
+        // label), sitting right on the same trace the agent produced, next to
+        // the objective calibration score classifyHts() already recorded.
+        if (usage.traceId) {
+          const lf = getLangfuse();
+          lf.score({ traceId: usage.traceId, name: 'deepest_match_level', value: deepest });
+          lf.score({
+            traceId: usage.traceId,
+            name: 'accuracy_at_10',
+            value: base.matched[10] ? 1 : 0,
+          });
         }
         return {
           ...base,
@@ -258,6 +277,8 @@ async function run(): Promise<void> {
   console.log(`avg processingTime: ${avg((r) => r.processingTime).toFixed(0)} ms`);
   console.log(`avg rounds: ${avg((r) => r.rounds).toFixed(2)}`);
   console.log(`avg toolCalls: ${avg((r) => r.toolCalls).toFixed(2)}`);
+
+  await flushLangfuse();
 }
 
 run()

@@ -1,5 +1,6 @@
 import type { HtsClassifyResult } from './types';
 import { runDataTool } from './tools';
+import type { LangfuseTraceClient } from 'langfuse';
 
 /**
  * Adversarial second-pass verifier. After the agent proposes a classification,
@@ -61,7 +62,7 @@ function extractText(data: any): string {
 export async function verifyClassification(
   product: string,
   result: HtsClassifyResult,
-  opts: { model: string; signal?: AbortSignal },
+  opts: { model: string; signal?: AbortSignal; lfTrace?: LangfuseTraceClient },
 ): Promise<VerifyVerdict | null> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey || !result.hs_code) return null;
@@ -92,6 +93,12 @@ export async function verifyClassification(
     text: { format: { type: 'json_schema', name: 'verify', strict: true, schema: VERIFY_SCHEMA } },
   };
 
+  const lfGen = opts.lfTrace?.generation({
+    name: 'verify',
+    model: opts.model,
+    input: [{ role: 'system', content: VERIFY_PROMPT }, { role: 'user', content: userContent }],
+  });
+
   let data: any;
   try {
     const resp = await fetch(OPENAI_RESPONSES_URL, {
@@ -100,9 +107,13 @@ export async function verifyClassification(
       body: JSON.stringify(body),
       signal: opts.signal ?? AbortSignal.timeout(120000),
     });
-    if (!resp.ok) return null; // verification is best-effort; never block the answer
+    if (!resp.ok) {
+      lfGen?.end({ level: 'ERROR', statusMessage: `HTTP ${resp.status}` });
+      return null; // verification is best-effort; never block the answer
+    }
     data = await resp.json();
-  } catch {
+  } catch (e: any) {
+    lfGen?.end({ level: 'ERROR', statusMessage: e?.message || String(e) });
     return null;
   }
 
@@ -120,7 +131,15 @@ export async function verifyClassification(
       }
     }
   }
-  if (!parsed || (parsed.verdict !== 'confirm' && parsed.verdict !== 'revise')) return null;
+  if (!parsed || (parsed.verdict !== 'confirm' && parsed.verdict !== 'revise')) {
+    lfGen?.end({ output: raw, level: 'WARNING', statusMessage: 'unparseable verifier output' });
+    return null;
+  }
+
+  lfGen?.end({
+    output: parsed,
+    usage: { input: data?.usage?.input_tokens, output: data?.usage?.output_tokens, unit: 'TOKENS' },
+  });
 
   return {
     verdict: parsed.verdict,
